@@ -1,0 +1,61 @@
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("website_traffic.csv")
+
+print("Website Traffic Dataset")
+print(df)
+
+# Basic Metrics
+total_users = len(df)
+total_pageviews = df["PageViews"].sum()
+avg_session_duration = df["SessionDuration"].mean()
+
+print("\n----- Web Traffic Analytics Report -----")
+print(f"Total Users: {total_users}")
+print(f"Total Page Views: {total_pageviews}")
+print(f"Average Session Duration: {avg_session_duration:.2f} seconds")
+
+# Most visited page
+most_visited = df["Page"].value_counts().idxmax()
+
+# Traffic source analysis
+source_analysis = df.groupby("TrafficSource")["PageViews"].sum()
+
+# Drop-off analysis
+drop_offs = len(df[df["ExitPage"] == "Yes"])
+
+report = pd.DataFrame({
+    "Metric": [
+        "Total Users",
+        "Total Page Views",
+        "Average Session Duration",
+        "Drop-Off Sessions",
+        "Most Visited Page"
+    ],
+    "Value": [
+        total_users,
+        total_pageviews,
+        round(avg_session_duration, 2),
+        drop_offs,
+        most_visited
+    ]
+})
+
+print("\nTraffic Report")
+print(report)
+
+print("\nTraffic Sources")
+print(source_analysis)
+
+# Save report
+report.to_csv("traffic_report.csv", index=False)
+
+print("\nReport saved as traffic_report.csv")
+
+# Recommendations
+print("\nRecommendations:")
+print("- Improve pages with high drop-off rates.")
+print("- Optimize low-engagement pages.")
+print("- Increase traffic from high-performing sources.")
+print("- Simplify navigation to improve user journeys.")
